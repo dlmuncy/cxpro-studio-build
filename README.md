@@ -2,11 +2,11 @@
 
 <img src="assets/banner.png" alt="CXPro Banner" width="100%" style="border-radius: 10px; margin-bottom: 20px;" />
 
-# CXPro — Multi-AI Legal Contract Auditor & Redline Engine
+# cxpro.site — Multi-AI Legal Contract Auditor & Redline Engine
 
 ### Autonomous Legal Engineering • 3-Model AI Consensus • Real-Time Risk Redlining • 500+ Benchmark Clauses
 
-[![Website](https://img.shields.io/badge/Live%20Demo-cxpro.site-FF6B00?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cxpro.site)
+[![Website](https://img.shields.io/badge/Live%20Site-cxpro.site-FF6B00?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cxpro.site)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -30,9 +30,10 @@
 
 ## 🌟 Executive Overview
 
-**CXPro** is an enterprise-grade AI legal engineering platform that orchestrates multiple frontier Large Language Models simultaneously (**GPT-4o**, **Claude 3.5 Sonnet**, and **Gemini 2.0**) to perform 360° vulnerability auditing, liability exposure analysis, and automated counter-proposal drafting in seconds.
+**cxpro.site** is an enterprise-grade AI legal engineering platform that orchestrates multiple frontier Large Language Models simultaneously (**GPT-4o**, **Claude 3.5 Sonnet**, and **Gemini 2.0**) to perform 360° vulnerability auditing, liability exposure analysis, and automated counter-proposal drafting in seconds.
 
-Designed for legal teams, in-house counsel, and software/AI testing contractors on **Handshake AI**, CXPro eliminates hours of tedious contract review while guarding against catastrophic liability traps, indemnification imbalances, and non-compliant clauses.
+Designed for legal teams, in-house counsel, and software/AI testing contractors on **Handshake AI**, cxpro.site eliminates hours of tedious contract review while guarding against catastrophic liability traps, indemnification imbalances, and non-compliant clauses.
+
 
 ---
 

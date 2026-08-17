@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div className="flex items-baseline space-x-1.5 min-w-0">
               <span className="font-bold text-sm tracking-tight text-[#1A1A1A] dark:text-white uppercase font-sans truncate">
-                {whiteLabel.enabled ? whiteLabel.firmName : 'CXPRO'}
+                {whiteLabel.enabled ? whiteLabel.firmName : 'cxpro.site'}
               </span>
               {!whiteLabel.enabled && (
                 <span className="hidden sm:inline-block text-[10px] font-mono font-normal opacity-70 uppercase tracking-widest text-[#1A1A1A] dark:text-slate-300">
@@ -53,6 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               )}
             </div>
+
           </div>
 
           {/* Desktop Navigation Links (Visible on md and larger screens / landscape) */}
@@ -187,8 +188,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="p-2.5 rounded bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/60 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-orange-800 dark:text-orange-300 uppercase block font-mono">
-                {isSubscribed ? `Plan: ${currentSubscription.planName}` : 'CXPro Subscription'}
+                {isSubscribed ? `Plan: ${currentSubscription.planName}` : 'cxpro.site Subscription'}
               </span>
+
               <span className="text-[10px] text-slate-500 font-mono">
                 {isSubscribed ? 'All redlines unlocked' : 'Unlock all blurred issues'}
               </span>

@@ -34,7 +34,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/60 text-[#F97316] text-xs font-bold shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#F97316] animate-pulse" />
-              <span>CXPRO MULTI-AI CONCORDANCE ENGINE v4.2</span>
+              <span>CXPRO.SITE MULTI-AI CONCORDANCE ENGINE v4.2</span>
             </div>
 
             {/* Headline */}
@@ -44,8 +44,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             {/* Subheadline */}
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-mono">
-              CXPro orchestrates GPT-4o, Claude 3.5, and Gemini 1.5 in parallel to instantly uncover catastrophic liabilities, benchmark against 500+ vetted clauses, and draft watertight legal agreements.
+              cxpro.site orchestrates GPT-4o, Claude 3.5, and Gemini 1.5 in parallel to instantly uncover catastrophic liabilities, benchmark against 500+ vetted clauses, and draft watertight legal agreements.
             </p>
+
 
             {/* CTA Buttons */}
             <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -194,7 +195,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               Calculate Your Legal Team's ROI
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              CXPro saves an average of 15-20 hours per week per attorney while reducing catastrophic breach risk.
+              cxpro.site saves an average of 15-20 hours per week per attorney while reducing catastrophic breach risk.
             </p>
           </div>
 
@@ -264,7 +265,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => onSelectPlan('professional')}
                 className="w-full py-2 px-3 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all"
               >
-                Unlock Full CXPro Engine
+                Unlock Full cxpro.site Engine
               </button>
             </div>
           </div>
@@ -276,12 +277,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <h2 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">
-              CXPro Subscription Plans & Payment Options
+              cxpro.site Subscription Plans & Payment Options
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Select a plan below to activate real-time Multi-AI redlining and unblur all contract risk provisions.
             </p>
           </div>
+
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {PRICING_TIERS.map((plan) => (
@@ -363,12 +365,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="w-5 h-5 rounded bg-[#F97316] text-white flex items-center justify-center font-bold text-[10px]">
                 CX
               </div>
-              <span className="font-bold text-[#1A1A1A] dark:text-white uppercase font-sans">CXPro Legal Suite</span>
+              <span className="font-bold text-[#1A1A1A] dark:text-white uppercase font-sans">cxpro.site</span>
             </div>
             <span className="hidden sm:inline text-slate-400">•</span>
             <span className="text-slate-500 dark:text-slate-400 text-[11px]">
-              © {new Date().getFullYear()} CXPro (cxpro.site). All rights reserved.
+              © {new Date().getFullYear()} cxpro.site. All rights reserved.
             </span>
+
           </div>
 
           {/* LEGAL & COMPLIANCE LINKS */}

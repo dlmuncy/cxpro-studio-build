@@ -66,7 +66,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text(`CXPro - Legal Contract Audit Report`, 14, 20);
+    doc.text(`cxpro.site - Legal Contract Audit Report`, 14, 20);
 
     doc.setFontSize(12);
     doc.text(`Document: ${analysis.filename}`, 14, 30);
@@ -103,10 +103,10 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
     if (!isActuallySubscribed && analysis.consensusRecommendations.length > 3) {
       doc.text(`[+] ${analysis.consensusRecommendations.length - 3} More Redline Recommendations Hidden in Free Scan.`, 14, yPos);
       yPos += 6;
-      doc.text(`Subscribe to CXPro Pro to unlock all recommendations and export full audit.`, 14, yPos);
+      doc.text(`Subscribe to cxpro.site Pro to unlock all recommendations and export full audit.`, 14, yPos);
     }
 
-    doc.save(`${analysis.filename}_CXPro_Audit_Report.pdf`);
+    doc.save(`${analysis.filename}_cxpro.site_Audit_Report.pdf`);
   };
 
   const handleOpenSubscription = (planId: 'starter' | 'professional' | 'enterprise' = 'professional') => {
@@ -136,7 +136,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
-            CXPRO MULTI-AI AUDIT (GPT-4o / CLAUDE 3.5 / GEMINI 1.5) • TOTAL ISSUES FOUND: {totalIssuesCount}
+            CXPRO.SITE MULTI-AI AUDIT (GPT-4o / CLAUDE 3.5 / GEMINI 1.5) • TOTAL ISSUES FOUND: {totalIssuesCount}
           </p>
         </div>
 
@@ -201,7 +201,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-orange-100 max-w-3xl leading-relaxed">
-              We identified <strong>{totalIssuesCount} total vulnerabilities</strong> ({criticalRisks.length} Critical, {highRisks.length} High, {mediumOrLowRisks.length} Medium/Low). 3 sample issues of varying severity are unlocked below. Subscribe to CXPro to unlock all redlines, auto-remediations, and unlimited scans.
+              We identified <strong>{totalIssuesCount} total vulnerabilities</strong> ({criticalRisks.length} Critical, {highRisks.length} High, {mediumOrLowRisks.length} Medium/Low). 3 sample issues of varying severity are unlocked below. Subscribe to cxpro.site to unlock all redlines, auto-remediations, and unlimited scans.
             </p>
           </div>
 
@@ -210,10 +210,11 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
             className="whitespace-nowrap px-4 py-2 rounded bg-white text-[#F97316] hover:bg-orange-50 font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center space-x-1.5"
           >
             <Crown className="w-3.5 h-3.5 text-[#F97316]" />
-            <span>Unlock CXPro ($349/mo)</span>
+            <span>Unlock cxpro.site ($349/mo)</span>
           </button>
         </div>
       )}
+
 
       {/* EXECUTIVE SUMMARY CARD */}
       <div className="bg-[#1A1A1A] text-white rounded p-5 sm:p-6 shadow-md border border-[#333333] relative overflow-hidden font-mono">
@@ -466,13 +467,13 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
                       🔒 Recommendation Redline #{index + 1} Hidden ({rec.scoreReductionPotential} Point Impact)
                     </span>
                     <p className="text-[10px] text-slate-500 max-w-md font-mono">
-                      Upgrade to CXPro Subscription to unlock this automatic redline, clause modification, and full legal draft.
+                      Upgrade to cxpro.site Subscription to unlock this automatic redline, clause modification, and full legal draft.
                     </p>
                     <button
                       onClick={() => handleOpenSubscription('professional')}
                       className="px-3 py-1 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider font-mono shadow-2xs"
                     >
-                      Unlock with CXPro Subscription
+                      Unlock with cxpro.site Subscription
                     </button>
                   </div>
                 </div>
@@ -488,9 +489,10 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
                   +{analysis.consensusRecommendations.length - 3} Additional Automated Redlines Hidden
                 </span>
                 <span className="text-[11px] text-slate-300 font-mono">
-                  CXPro subscribers get unrestricted access to all multi-model contract rewrites and live document export.
+                  cxpro.site subscribers get unrestricted access to all multi-model contract rewrites and live document export.
                 </span>
               </div>
+
               <button
                 onClick={() => handleOpenSubscription('professional')}
                 className="px-4 py-2 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider font-mono shadow-2xs whitespace-nowrap"
@@ -597,7 +599,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
                         <span>🔒 {risk.severity} Risk #{index + 1} Hidden & Blurred</span>
                       </div>
                       <p className="text-[10px] text-slate-500 max-w-sm font-mono">
-                        Requires CXPro Active Subscription to view legal consequence, liability score impact, and instant redline.
+                        Requires cxpro.site Active Subscription to view legal consequence, liability score impact, and instant redline.
                       </p>
                       <button
                         onClick={() => handleOpenSubscription('professional')}
@@ -665,7 +667,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
                 <div className="p-3.5 rounded bg-gradient-to-br from-[#202020] to-[#121212] text-white border border-[#333333] space-y-2">
                   <div className="flex items-center space-x-1.5 text-amber-400 text-xs font-bold uppercase">
                     <Crown className="w-3.5 h-3.5" />
-                    <span>CXPro Unlimited Tier</span>
+                    <span>cxpro.site Unlimited Tier</span>
                   </div>
                   <p className="text-[10px] text-slate-300 leading-relaxed font-mono">
                     Subscribe now to generate automated redline amendments and audit unlimited agreements per month.
@@ -752,7 +754,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white flex items-center space-x-2 font-mono">
                 <Scale className="w-4 h-4 text-sky-500" />
-                <span>Clause Match vs 500+ Vetted CXPro Standards</span>
+                <span>Clause Match vs 500+ Vetted cxpro.site Standards</span>
               </h3>
               <span className="text-[10px] text-slate-400">
                 {analysis.geminiAnalysis.clauseMatches.length} CLAUSES BENCHMARKED
@@ -810,7 +812,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
                   </div>
                   <div className="absolute inset-0 bg-white/80 dark:bg-[#1A1A1A]/85 backdrop-blur-xs flex items-center justify-center space-x-2 text-xs font-bold text-[#F97316]">
                     <Lock className="w-3.5 h-3.5" />
-                    <span>🔒 Clause Comparison #{i + 1} Locked • Upgrade to CXPro</span>
+                    <span>🔒 Clause Comparison #{i + 1} Locked • Upgrade to cxpro.site</span>
                   </div>
                 </div>
               );
@@ -828,13 +830,14 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
             </div>
             <div>
               <span className="text-xs font-bold uppercase text-white block">
-                CXPro Free Scan: 3 Issues Shown • {totalIssuesCount - 3} Hidden Behind Subscription
+                cxpro.site Free Scan: 3 Issues Shown • {totalIssuesCount - 3} Hidden Behind Subscription
               </span>
               <span className="text-[10px] text-slate-400">
                 Unlock instant automated redlines, watertight clause swaps, and unlimited contract audits.
               </span>
             </div>
           </div>
+
 
           <div className="flex items-center space-x-2">
             <button

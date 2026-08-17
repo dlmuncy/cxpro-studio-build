@@ -190,12 +190,13 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
             </div>
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">
-                Upgrade CXPro Multi-AI Legal Suite
+                Upgrade cxpro.site Multi-AI Legal Suite
               </h2>
               <p className="text-[10px] text-slate-500 dark:text-slate-400">
                 OFFICIAL STRIPE ENCRYPTED BILLING • INSTANT ACCESS TO UNBLURRED AUDITS & REDLINES
               </p>
             </div>
+
           </div>
 
           <button
@@ -420,7 +421,7 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
           {/* LEGAL & COMPLIANCE CONSENT NOTICE */}
           <div className="text-[10px] text-slate-400 font-mono text-center sm:text-left border-t border-slate-800/80 pt-2 flex flex-wrap items-center justify-between gap-2">
             <span>
-              By proceeding, you agree to CXPro's{' '}
+              By proceeding, you agree to cxpro.site's{' '}
               <button
                 type="button"
                 onClick={() => onOpenLegalModal?.('terms')}
@@ -428,6 +429,7 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
               >
                 Terms of Service
               </button>
+
               ,{' '}
               <button
                 type="button"

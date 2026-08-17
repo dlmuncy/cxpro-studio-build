@@ -89,8 +89,9 @@ export const WhiteLabelModal: React.FC<WhiteLabelModalProps> = ({
           <div className="flex items-center justify-between p-3 rounded bg-[#F8F8F8] dark:bg-[#222222] border border-[#D1D1D1] dark:border-[#333333]">
             <div>
               <span className="font-bold text-[#1A1A1A] dark:text-white block font-sans">ENABLE FIRM REBRANDING</span>
-              <span className="text-[10px] text-slate-400 font-mono">REPLACE CXPRO LOGO WITH YOUR LAW FIRM IDENTITY</span>
+              <span className="text-[10px] text-slate-400 font-mono">REPLACE CXPRO.SITE LOGO WITH YOUR LAW FIRM IDENTITY</span>
             </div>
+
             <input
               type="checkbox"
               disabled={!isEnterprise}

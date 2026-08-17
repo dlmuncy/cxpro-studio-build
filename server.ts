@@ -627,18 +627,18 @@ app.post('/api/students/claim-discount', (req, res) => {
     studentLeads.set(leadId, newLead);
 
     // Build rich HTML email payload
-    const emailSubject = `🎓 Your $49.99 CXPro Voucher Code: ${generatedCode} (Handshake AI & Software QA)`;
+    const emailSubject = `🎓 Your $49.99 cxpro.site Voucher Code: ${generatedCode} (Handshake AI & Software QA)`;
     const emailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
         <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #F97316;">
-          <h1 style="color: #111827; font-size: 22px; font-weight: 800; margin: 0 0 4px 0;">CXPro</h1>
+          <h1 style="color: #111827; font-size: 22px; font-weight: 800; margin: 0 0 4px 0;">cxpro.site</h1>
           <p style="color: #F97316; font-size: 13px; font-weight: 700; text-transform: uppercase; margin: 0;">Handshake AI • Software & AI Testing Contractor Suite</p>
         </div>
 
         <div style="padding: 24px 0;">
           <p style="font-size: 15px; color: #374151; margin-top: 0;">Hello <strong>${newLead.fullName}</strong>,</p>
           <p style="font-size: 14px; color: #4b5563; line-height: 1.6;">
-            Your exclusive 66% discount voucher for CXPro has been approved for <strong>${newLead.contractorRole}</strong>!
+            Your exclusive 66% discount voucher for cxpro.site has been approved for <strong>${newLead.contractorRole}</strong>!
           </p>
 
           <div style="background-color: #FFF7ED; border: 2px dashed #F97316; border-radius: 8px; padding: 20px; text-align: center; margin: 24px 0;">
@@ -669,10 +669,11 @@ app.post('/api/students/claim-discount', (req, res) => {
 
         <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; font-size: 11px; color: #9ca3af; text-align: center;">
           <p style="margin: 0 0 4px 0;">Issued to ${newLead.email} via Handshake AI Academic & Contractor Verification.</p>
-          <p style="margin: 0;">CXPro • Autonomous Multi-AI Legal Engineering</p>
+          <p style="margin: 0;">cxpro.site • Autonomous Multi-AI Legal Engineering</p>
         </div>
       </div>
     `;
+
 
     const emailRecord = {
       id: 'eml_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
@@ -811,12 +812,12 @@ app.post('/api/billing/process-payment', (req, res) => {
     billingInvoices.unshift(invoice);
 
     // Generate HTML receipt email
-    const receiptSubject = `Receipt for your CXPro Subscription (${invoice.planName}) - ${invoiceId}`;
+    const receiptSubject = `Receipt for your cxpro.site Subscription (${invoice.planName}) - ${invoiceId}`;
     const receiptHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
         <div style="border-bottom: 2px solid #10B981; padding-bottom: 16px; margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="color: #111827; font-size: 20px; font-weight: 800; margin: 0;">CXPro</h1>
+            <h1 style="color: #111827; font-size: 20px; font-weight: 800; margin: 0;">cxpro.site</h1>
             <span style="background-color: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase;">Paid & Active</span>
           </div>
           <p style="color: #6B7280; font-size: 12px; margin: 4px 0 0 0;">Official Billing Receipt & Tax Invoice</p>
@@ -859,10 +860,11 @@ app.post('/api/billing/process-payment', (req, res) => {
         </div>
 
         <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 11px; color: #9CA3AF;">
-          CXPro • Autonomous Legal Engineering • Stripe Encrypted 256-Bit Billing
+          cxpro.site • Autonomous Legal Engineering • Stripe Encrypted 256-Bit Billing
         </div>
       </div>
     `;
+
 
     const emailRecord = {
       id: 'eml_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),

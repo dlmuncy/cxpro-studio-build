@@ -283,7 +283,7 @@ export default function App() {
         <footer className="border-t border-[#D1D1D1] dark:border-[#222222] bg-white dark:bg-[#1A1A1A] py-4 transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1 font-mono">
             <p className="font-bold text-[#1A1A1A] dark:text-slate-200 uppercase font-sans">
-              {whiteLabel.enabled ? whiteLabel.firmName : 'CXPRO'} — MULTI-AI LEGAL CONTRACT AUDITOR & REDLINE ENGINE
+              {whiteLabel.enabled ? whiteLabel.firmName : 'cxpro.site'} — MULTI-AI LEGAL CONTRACT AUDITOR & REDLINE ENGINE
             </p>
             <p className="text-[10px] text-slate-400">
               {whiteLabel.enabled ? whiteLabel.customFooterText : 'POWERED BY GPT-4o, CLAUDE 3.5 & GEMINI 1.5 PRO • 500+ CLAUSE BENCHMARKS'}
@@ -319,9 +319,10 @@ export default function App() {
         {/* SYSTEM STATUS BAR FOOTER */}
         <div className="h-6 bg-[#1A1A1A] text-white flex items-center justify-between px-4 text-[9px] font-mono border-t border-[#333333]">
           <div className="flex gap-4 items-center">
-            <span className="text-[#F97316]">ENGINE: CXPRO MULTI-AI v4.2</span>
+            <span className="text-[#F97316]">ENGINE: CXPRO.SITE MULTI-AI v4.2</span>
             <span className="opacity-40">|</span>
             <span className="text-emerald-400">TIER: {subscription.planName.toUpperCase()}</span>
+
             {subscription.discountApplied && (
               <>
                 <span className="opacity-40">|</span>
