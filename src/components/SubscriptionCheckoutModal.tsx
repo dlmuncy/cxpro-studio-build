@@ -170,7 +170,7 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
   // Handle direct redirect to Stripe Checkout
   const handleProceedToStripe = () => {
     setIsRedirecting(true);
-    const checkoutUrl = getStripeCheckoutUrl(selectedPlan.id);
+    const checkoutUrl = getStripeCheckoutUrl(selectedPlan.id, billingCycle);
     
     // Redirect to the Stripe Hosted Checkout Page
     setTimeout(() => {
