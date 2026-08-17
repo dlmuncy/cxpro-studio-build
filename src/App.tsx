@@ -271,6 +271,8 @@ export default function App() {
       {showWhiteLabelModal && (
         <WhiteLabelModal
           config={whiteLabel}
+          currentSubscription={subscription}
+          onUpgradeToEnterprise={() => handleOpenSubscriptionModal('enterprise')}
           onSave={(newConf) => setWhiteLabel(newConf)}
           onClose={() => setShowWhiteLabelModal(false)}
         />
