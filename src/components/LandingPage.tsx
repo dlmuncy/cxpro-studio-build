@@ -6,13 +6,16 @@ interface LandingPageProps {
   onStartTrial: () => void;
   onSelectPlan: (plan: 'student' | 'starter' | 'professional' | 'enterprise') => void;
   onOpenStudentModal?: () => void;
+  onOpenLegalModal?: (tab?: 'terms' | 'privacy' | 'ai-disclaimer') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onStartTrial,
   onSelectPlan,
-  onOpenStudentModal
+  onOpenStudentModal,
+  onOpenLegalModal
 }) => {
+
   // ROI Calculator state
   const [attorneysCount, setAttorneysCount] = useState<number>(3);
   const [hourlyRate, setHourlyRate] = useState<number>(350);
@@ -351,6 +354,56 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* COMPREHENSIVE FOOTER & COMPLIANCE SECTION */}
+      <footer className="border-t border-[#D1D1D1] dark:border-[#333333] bg-[#F1F1F1] dark:bg-[#151515] py-8 text-xs font-mono">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+            <div className="flex items-center space-x-2">
+              <div className="w-5 h-5 rounded bg-[#F97316] text-white flex items-center justify-center font-bold text-[10px]">
+                CX
+              </div>
+              <span className="font-bold text-[#1A1A1A] dark:text-white uppercase font-sans">CXPro Legal Suite</span>
+            </div>
+            <span className="hidden sm:inline text-slate-400">•</span>
+            <span className="text-slate-500 dark:text-slate-400 text-[11px]">
+              © {new Date().getFullYear()} CXPro (cxpro.site). All rights reserved.
+            </span>
+          </div>
+
+          {/* LEGAL & COMPLIANCE LINKS */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-600 dark:text-slate-300">
+            <button
+              type="button"
+              onClick={() => onOpenLegalModal?.('terms')}
+              className="hover:text-[#F97316] transition-colors underline underline-offset-2"
+            >
+              Terms of Service
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenLegalModal?.('privacy')}
+              className="hover:text-[#F97316] transition-colors underline underline-offset-2"
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenLegalModal?.('ai-disclaimer')}
+              className="hover:text-[#F97316] transition-colors underline underline-offset-2"
+            >
+              AI Safety & Disclaimer
+            </button>
+            <a
+              href="mailto:support@cxpro.site"
+              className="hover:text-[#F97316] transition-colors flex items-center gap-1 text-slate-500 font-bold"
+            >
+              support@cxpro.site
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
+

@@ -8,6 +8,7 @@ import { ContractGeneratorView } from './components/ContractGeneratorView';
 import { WhiteLabelModal } from './components/WhiteLabelModal';
 import { SubscriptionCheckoutModal } from './components/SubscriptionCheckoutModal';
 import { StudentDiscountModal } from './components/StudentDiscountModal';
+import { TermsAndPrivacyModal } from './components/TermsAndPrivacyModal';
 import { ContractRecord, ClauseLibraryItem, WhiteLabelConfig, UserSubscription, SubscriptionTier, StudentLead } from './types';
 import { SAMPLE_ANALYZED_CONTRACTS } from './data/seedData';
 import { AIOrchestrator } from './services/aiOrchestrator';
@@ -19,6 +20,16 @@ export default function App() {
   const [selectedContractId, setSelectedContractId] = useState<string>(SAMPLE_ANALYZED_CONTRACTS[0].id);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [clauseToInsert, setClauseToInsert] = useState<ClauseLibraryItem | null>(null);
+
+  // Legal & Compliance Modal State
+  const [showLegalModal, setShowLegalModal] = useState<boolean>(false);
+  const [legalDefaultTab, setLegalDefaultTab] = useState<'terms' | 'privacy' | 'ai-disclaimer'>('terms');
+
+  const handleOpenLegalModal = (tab: 'terms' | 'privacy' | 'ai-disclaimer' = 'terms') => {
+    setLegalDefaultTab(tab);
+    setShowLegalModal(true);
+  };
+
 
   // User subscription state: persistent with localStorage + query param sync
   const [subscription, setSubscription] = useState<UserSubscription>(() => {
@@ -226,6 +237,7 @@ export default function App() {
               onStartTrial={() => setActiveTab('dashboard')}
               onSelectPlan={(plan) => handleOpenSubscriptionModal(plan)}
               onOpenStudentModal={handleOpenStudentModal}
+              onOpenLegalModal={handleOpenLegalModal}
             />
           )}
 
@@ -276,6 +288,31 @@ export default function App() {
             <p className="text-[10px] text-slate-400">
               {whiteLabel.enabled ? whiteLabel.customFooterText : 'POWERED BY GPT-4o, CLAUDE 3.5 & GEMINI 1.5 PRO • 500+ CLAUSE BENCHMARKS'}
             </p>
+            <div className="pt-2 flex items-center justify-center gap-3 text-[10px] text-slate-400">
+              <button
+                type="button"
+                onClick={() => handleOpenLegalModal('terms')}
+                className="hover:text-[#F97316] underline"
+              >
+                Terms of Service
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => handleOpenLegalModal('privacy')}
+                className="hover:text-[#F97316] underline"
+              >
+                Privacy Policy
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => handleOpenLegalModal('ai-disclaimer')}
+                className="hover:text-[#F97316] underline"
+              >
+                AI Safety Disclaimer
+              </button>
+            </div>
           </div>
         </footer>
 
@@ -295,6 +332,14 @@ export default function App() {
             <span className="hidden sm:inline">ENCRYPTION: AES-256 ACTIVE</span>
           </div>
           <div className="flex gap-4 items-center">
+            <button
+              type="button"
+              onClick={() => handleOpenLegalModal('terms')}
+              className="text-slate-400 hover:text-white underline cursor-pointer"
+            >
+              LEGAL & PRIVACY (T&C)
+            </button>
+            <span className="opacity-40">|</span>
             <span className="text-emerald-400">STATUS: ALL SYSTEMS OPERATIONAL</span>
             <span className="opacity-40 hidden md:inline">|</span>
             <span className="hidden md:inline">TIME: {new Date().toLocaleTimeString()}</span>
@@ -328,6 +373,7 @@ export default function App() {
           setShowStudentModal(true);
         }}
         preappliedPromoCode={preappliedPromoCode}
+        onOpenLegalModal={handleOpenLegalModal}
       />
 
       {/* HANDSHAKE AI STUDENT DISCOUNT CAPTURE MODAL */}
@@ -336,6 +382,14 @@ export default function App() {
         onClose={() => setShowStudentModal(false)}
         onApplyStudentCode={handleApplyStudentCode}
       />
+
+      {/* TERMS OF SERVICE, PRIVACY & AI DISCLAIMER MODAL */}
+      <TermsAndPrivacyModal
+        isOpen={showLegalModal}
+        onClose={() => setShowLegalModal(false)}
+        defaultTab={legalDefaultTab}
+      />
     </div>
   );
 }
+

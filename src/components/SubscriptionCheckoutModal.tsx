@@ -30,7 +30,9 @@ interface SubscriptionCheckoutModalProps {
   initialPlan?: 'student' | 'starter' | 'professional' | 'enterprise';
   onOpenStudentClaimModal?: () => void;
   preappliedPromoCode?: string;
+  onOpenLegalModal?: (tab?: 'terms' | 'privacy' | 'ai-disclaimer') => void;
 }
+
 
 export const PRICING_TIERS: PricingPlan[] = [
   {
@@ -114,8 +116,10 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
   onUpgrade,
   initialPlan = 'professional',
   onOpenStudentClaimModal,
-  preappliedPromoCode
+  preappliedPromoCode,
+  onOpenLegalModal
 }) => {
+
   const [selectedPlanId, setSelectedPlanId] = useState<'student' | 'starter' | 'professional' | 'enterprise'>(initialPlan);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
@@ -412,6 +416,38 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
               )}
             </button>
           </div>
+
+          {/* LEGAL & COMPLIANCE CONSENT NOTICE */}
+          <div className="text-[10px] text-slate-400 font-mono text-center sm:text-left border-t border-slate-800/80 pt-2 flex flex-wrap items-center justify-between gap-2">
+            <span>
+              By proceeding, you agree to CXPro's{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLegalModal?.('terms')}
+                className="text-[#F97316] hover:underline font-bold"
+              >
+                Terms of Service
+              </button>
+              ,{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLegalModal?.('privacy')}
+                className="text-[#F97316] hover:underline font-bold"
+              >
+                Privacy Policy
+              </button>
+              , and{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLegalModal?.('ai-disclaimer')}
+                className="text-[#F97316] hover:underline font-bold"
+              >
+                AI Safety Disclaimer
+              </button>
+              .
+            </span>
+            <span className="text-emerald-400 font-bold">14-Day Money-Back Guarantee</span>
+          </div>
         </div>
 
         {/* FOOTER */}
@@ -421,14 +457,24 @@ export const SubscriptionCheckoutModal: React.FC<SubscriptionCheckoutModalProps>
             <span>POWERED BY STRIPE • 14-DAY MONEY-BACK GUARANTEE • INSTANT TIER ACTIVATION</span>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-black dark:hover:text-white font-mono"
-          >
-            Close
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              type="button"
+              onClick={() => onOpenLegalModal?.('terms')}
+              className="text-[10px] text-slate-500 hover:text-[#F97316] font-mono underline"
+            >
+              Legal & Compliance
+            </button>
+            <button
+              onClick={onClose}
+              className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-black dark:hover:text-white font-mono"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
