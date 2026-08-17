@@ -20,18 +20,24 @@ export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [clauseToInsert, setClauseToInsert] = useState<ClauseLibraryItem | null>(null);
 
-  // User subscription state: Defaults to Free Tier (1 Free Scan with 3 Issues Unlocked & Paywalled Blur)
-  const [subscription, setSubscription] = useState<UserSubscription>({
-    tier: 'free',
-    status: 'free_scan_used',
-    planName: 'Free Scan Tier',
-    scansUsed: 1,
-    scansTotal: 1,
-    paymentLink: 'https://buy.stripe.com/test_professional_plan_cxpro'
+  // User subscription state: persistent with localStorage + query param sync
+  const [subscription, setSubscription] = useState<UserSubscription>(() => {
+    try {
+      const saved = localStorage.getItem('cxpro_user_subscription');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      tier: 'free',
+      status: 'free_scan_used',
+      planName: 'Free Scan Tier',
+      scansUsed: 1,
+      scansTotal: 1
+    };
   });
   const [showSubscriptionModal, setShowSubscriptionModal] = useState<boolean>(false);
   const [initialSelectedPlan, setInitialSelectedPlan] = useState<'student' | 'starter' | 'professional' | 'enterprise'>('professional');
   const [preappliedPromoCode, setPreappliedPromoCode] = useState<string>('');
+  const [paymentSuccessBanner, setPaymentSuccessBanner] = useState<string | null>(null);
 
   // Student Discount Modal state
   const [showStudentModal, setShowStudentModal] = useState<boolean>(false);
@@ -45,6 +51,20 @@ export default function App() {
     customFooterText: 'Attorney-Client Privileged & Confidential'
   });
   const [showWhiteLabelModal, setShowWhiteLabelModal] = useState<boolean>(false);
+
+  // Check for Stripe Checkout Success Redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isSuccess = params.get('session') === 'success' || params.get('payment_success') === 'true';
+    const tierParam = (params.get('tier') || 'professional') as SubscriptionTier;
+
+    if (isSuccess && ['student', 'starter', 'professional', 'enterprise'].includes(tierParam)) {
+      handleUpgradeSubscription(tierParam);
+      setPaymentSuccessBanner(`🎉 Welcome to ${tierParam.toUpperCase()}! Your subscription is now fully active.`);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(() => setPaymentSuccessBanner(null), 10000);
+    }
+  }, []);
 
   // Sync Dark mode HTML class
   useEffect(() => {
@@ -89,18 +109,20 @@ export default function App() {
       enterprise: 9999
     };
 
-    setSubscription({
+    const newSubscription: UserSubscription = {
       tier,
       status: 'active',
       planName: planNames[tier],
       scansUsed: 1,
       scansTotal: scanTotals[tier],
       renewalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().substring(0, 10),
-      paymentLink: tier === 'student' 
-        ? 'https://buy.stripe.com/test_student_handshake_49_cxpro' 
-        : `https://buy.stripe.com/test_${tier}_plan_cxpro`,
       discountApplied: tier === 'student' ? 'HANDSHAKE49 ($49.99/mo • 3 Scans/mo)' : undefined
-    });
+    };
+
+    setSubscription(newSubscription);
+    try {
+      localStorage.setItem('cxpro_user_subscription', JSON.stringify(newSubscription));
+    } catch (e) {}
   };
 
   // Upload or paste contract text handler
@@ -183,6 +205,19 @@ export default function App() {
           onOpenSubscriptionModal={() => handleOpenSubscriptionModal('professional')}
           onOpenStudentModal={handleOpenStudentModal}
         />
+
+        {/* PAYMENT SUCCESS TOAST BANNER */}
+        {paymentSuccessBanner && (
+          <div className="bg-emerald-600 text-white px-4 py-2.5 text-center text-xs font-mono font-bold flex items-center justify-center space-x-2 shadow-md animate-bounce">
+            <span>{paymentSuccessBanner}</span>
+            <button 
+              onClick={() => setPaymentSuccessBanner(null)} 
+              className="ml-2 text-white/80 hover:text-white underline text-[10px]"
+            >
+              [Dismiss]
+            </button>
+          </div>
+        )}
 
         {/* MAIN VIEW ROUTING */}
         <main className="pb-12">
