@@ -1,0 +1,6 @@
+{
+  "name": "CXPro",
+  "description": "CXPro Legal Contract Analyzer & Risk Engine with Multi-AI consensus orchestration, freemium vulnerability auditing, clause library, and contract generator",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
