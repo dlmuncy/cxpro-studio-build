@@ -621,7 +621,7 @@ app.post('/api/students/claim-discount', (req, res) => {
       monthlyQuota: 3,
       claimedAt: new Date().toISOString(),
       status: 'sent',
-      paymentLink: 'https://buy.stripe.com/test_student_handshake_49_cxpro'
+      paymentLink: 'https://buy.stripe.com/7sY14oeis3nj11FfIFcjS0w'
     };
 
     studentLeads.set(leadId, newLead);
@@ -661,8 +661,8 @@ app.post('/api/students/claim-discount', (req, res) => {
           </ul>
 
           <div style="text-align: center; margin-top: 32px;">
-            <a href="https://cxpro.ai/checkout?code=${generatedCode}" style="background-color: #F97316; color: #ffffff; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block;">
-              Activate $49.99 Plan in CXPro →
+            <a href="https://buy.stripe.com/7sY14oeis3nj11FfIFcjS0w" style="background-color: #F97316; color: #ffffff; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block;">
+              Activate $49.99 Plan via Stripe →
             </a>
           </div>
         </div>
@@ -724,7 +724,7 @@ app.post('/api/students/verify-code', (req, res) => {
       discountedPrice: 49.99,
       monthlyQuota: 3,
       discountName: 'Handshake AI Contractor Discount ($49.99/mo • 3 Scans/mo)',
-      paymentLink: 'https://buy.stripe.com/test_student_handshake_49_cxpro'
+      paymentLink: 'https://buy.stripe.com/7sY14oeis3nj11FfIFcjS0w'
     });
   }
 
