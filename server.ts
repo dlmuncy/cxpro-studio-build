@@ -20,15 +20,51 @@ for (const sample of SAMPLE_ANALYZED_CONTRACTS) {
 }
 
 // ============================================================
+// PRODUCT INSIGHTS & ANALYTICS LOG
+// ============================================================
+
+interface AnalysisLog {
+  id: string;
+  timestamp: string;
+  filename: string;
+  contractLength: number;
+  documentType: string;
+  overallRiskScore: number;
+  riskCategory: string;
+  risksCount: number;
+  highConfidenceRisks: number;
+  missingClausesCount: number;
+  clauseQuality: string;
+  consensusRecs: number;
+  modelResults: {
+    structure: { success: boolean; latencyMs: number };
+    risk: { success: boolean; latencyMs: number };
+    clause: { success: boolean; latencyMs: number };
+  };
+  topRisks: string[];
+  totalAnalysisMs: number;
+}
+
+const analysisLogs: AnalysisLog[] = [];
+
+function logAnalysis(data: AnalysisLog) {
+  analysisLogs.unshift(data);
+  if (analysisLogs.length > 500) analysisLogs.pop();
+  console.log(`[Insights] Logged analysis: ${data.filename} | Score: ${data.overallRiskScore} | Risks: ${data.risksCount} | ${data.totalAnalysisMs}ms`);
+}
+
+// ============================================================
 // OPENROUTER MULTI-MODEL ENGINE
 // ============================================================
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 const MODELS = {
   structure: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  risk: 'openai/gpt-oss-20b:free',
+  risk: 'gemini-2.0-flash',  // via Gemini API directly for reliability
   clause: 'z-ai/glm-5.2:free',
   synthesis: 'nvidia/nemotron-3-ultra-550b-a55b:free'
 };
@@ -106,6 +142,65 @@ async function callOpenRouter(model: string, systemPrompt: string, userPrompt: s
   }
 }
 
+
+
+// Gemini direct API call — more reliable JSON output for risk analysis
+async function callGemini(systemPrompt: string, userPrompt: string): Promise<any> {
+  if (!GEMINI_API_KEY) {
+    console.warn('[Gemini] No API key configured.');
+    return null;
+  }
+
+  const body = {
+    contents: [
+      { role: 'user', parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }
+    ],
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 8000,
+      responseMimeType: 'application/json'
+    },
+    systemInstruction: {
+      parts: [{ text: systemPrompt }]
+    }
+  };
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`[Gemini] returned ${response.status}: ${errText.substring(0, 300)}`);
+      return null;
+    }
+
+    const data = await response.json();
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) {
+      console.error('[Gemini] returned empty content');
+      return null;
+    }
+
+    try {
+      let jsonStr = content.trim();
+      if (jsonStr.startsWith('```')) {
+        jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+      }
+      return JSON.parse(jsonStr);
+    } catch (parseErr) {
+      console.error('[Gemini] JSON parse failed:', parseErr);
+      return null;
+    }
+  } catch (err: any) {
+    console.error('[Gemini] call failed:', err.message);
+    return null;
+  }
+}
+
 // PHASE 1: PARALLEL SPECIALIZED ANALYSIS
 
 async function phase1_structureAnalysis(contractText: string): Promise<any> {
@@ -141,7 +236,8 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: overallRiskCategory, risks, complianceGaps`;
-  return callOpenRouter(MODELS.risk, system, user, true);
+  // Use Gemini API directly for reliable, consistent JSON output
+  return callGemini(system, user);
 }
 
 async function phase1_clauseAnalysis(contractText: string): Promise<any> {
@@ -329,15 +425,21 @@ function assembleFallback(structureFindings: any, validatedRisks: any[], clauseF
 // MAIN ANALYSIS ORCHESTRATOR
 
 async function runMultiModelAnalysis(contractText: string, filename: string): Promise<any> {
+  const startTime = Date.now();
   console.log(`[CXPro Engine] Starting multi-model analysis for ${filename} (${contractText.length} chars)`);
 
   // PHASE 1: 3 models in parallel (only API calls)
   console.log('[CXPro Engine] Phase 1: Parallel analysis (3 models)...');
+  const t1Start = Date.now();
   const [structureResult, riskResult, clauseResult] = await Promise.all([
     phase1_structureAnalysis(contractText),
     phase1_riskAnalysis(contractText),
     phase1_clauseAnalysis(contractText)
   ]);
+  const t1End = Date.now();
+  const structureLatency = t1End - t1Start;
+  // Approximate per-model latency (they ran in parallel, so total is max of all)
+  const modelLatency = structureLatency;
 
   if (!structureResult && !riskResult && !clauseResult) {
     console.error('[CXPro Engine] All models failed.');
@@ -396,6 +498,33 @@ async function runMultiModelAnalysis(contractText: string, filename: string): Pr
   console.log('[CXPro Engine] Phase 4: Local synthesis...');
   const finalResult = assembleFallback(structure, validatedRisks, clause, consensusData, filename);
   console.log('[CXPro Engine] Done.');
+
+  // Log to insights
+  const risks = finalResult.claudeAnalysis?.risks || [];
+  const topRisks = risks.slice(0, 5).map((r: any) => r.clauseTitle || 'Unknown');
+  const missingClauses = finalResult.gpt4Analysis?.missingStandardClauses || [];
+  logAnalysis({
+    id: 'log_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    filename,
+    contractLength: contractText.length,
+    documentType: finalResult.gpt4Analysis?.documentClassification || 'Unknown',
+    overallRiskScore: finalResult.overallRiskScore,
+    riskCategory: finalResult.claudeAnalysis?.overallRiskCategory || 'Unknown',
+    risksCount: risks.length,
+    highConfidenceRisks: risks.filter((r: any) => r.aiAgreementCount >= 2).length,
+    missingClausesCount: missingClauses.length,
+    clauseQuality: finalResult.geminiAnalysis?.overallClauseQuality || 'Unknown',
+    consensusRecs: finalResult.consensusRecommendations?.length || 0,
+    modelResults: {
+      structure: { success: !!structureResult, latencyMs: modelLatency },
+      risk: { success: !!riskResult, latencyMs: modelLatency },
+      clause: { success: !!clauseResult, latencyMs: modelLatency }
+    },
+    topRisks,
+    totalAnalysisMs: Date.now() - startTime
+  });
+
   return finalResult;
 }
 
@@ -700,6 +829,90 @@ app.post('/api/billing/process-payment', (req, res) => {
 app.get('/api/billing/invoices', (req, res) => res.json({ success: true, invoices: billingInvoices }));
 app.get('/api/email/outbox', (req, res) => res.json({ success: true, emails: dispatchedEmails }));
 
+// ============================================================
+// INSIGHTS & ANALYTICS API
+// ============================================================
+
+app.get('/api/insights', (req, res) => {
+  const total = analysisLogs.length;
+  if (total === 0) {
+    return res.json({
+      success: true,
+      summary: { total: 0, message: 'No analyses logged yet.' },
+      recent: []
+    });
+  }
+
+  // Aggregate insights
+  const avgScore = Math.round(analysisLogs.reduce((s, l) => s + l.overallRiskScore, 0) / total);
+  const avgRisks = (analysisLogs.reduce((s, l) => s + l.risksCount, 0) / total).toFixed(1);
+  const avgLatency = Math.round(analysisLogs.reduce((s, l) => s + l.totalAnalysisMs, 0) / total);
+
+  // Document type distribution
+  const docTypes: Record<string, number> = {};
+  analysisLogs.forEach(l => {
+    const t = l.documentType || 'Unknown';
+    docTypes[t] = (docTypes[t] || 0) + 1;
+  });
+
+  // Risk category distribution
+  const riskCategories: Record<string, number> = {};
+  analysisLogs.forEach(l => {
+    const c = l.riskCategory || 'Unknown';
+    riskCategories[c] = (riskCategories[c] || 0) + 1;
+  });
+
+  // Most common risks (frequency across all analyses)
+  const riskFrequency: Record<string, number> = {};
+  analysisLogs.forEach(l => {
+    l.topRisks.forEach(r => {
+      riskFrequency[r] = (riskFrequency[r] || 0) + 1;
+    });
+  });
+  const topRiskTypes = Object.entries(riskFrequency)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([name, count]) => ({ name, count }));
+
+  // Model reliability stats
+  const modelStats = {
+    structure: {
+      successRate: `${Math.round(analysisLogs.filter(l => l.modelResults.structure.success).length / total * 100)}%`,
+      avgLatencyMs: Math.round(analysisLogs.reduce((s, l) => s + l.modelResults.structure.latencyMs, 0) / total)
+    },
+    risk: {
+      successRate: `${Math.round(analysisLogs.filter(l => l.modelResults.risk.success).length / total * 100)}%`,
+      avgLatencyMs: Math.round(analysisLogs.reduce((s, l) => s + l.modelResults.risk.latencyMs, 0) / total)
+    },
+    clause: {
+      successRate: `${Math.round(analysisLogs.filter(l => l.modelResults.clause.success).length / total * 100)}%`,
+      avgLatencyMs: Math.round(analysisLogs.reduce((s, l) => s + l.modelResults.clause.latencyMs, 0) / total)
+    }
+  };
+
+  return res.json({
+    success: true,
+    summary: {
+      total,
+      avgRiskScore: avgScore,
+      avgRisksPerContract: avgRisks,
+      avgAnalysisTimeMs: avgLatency,
+      docTypes,
+      riskCategories,
+      topRiskTypes,
+      modelStats
+    },
+    recent: analysisLogs.slice(0, 20)
+  });
+});
+
+app.get('/api/insights/export', (req, res) => {
+  // Export all logs as JSON for external analysis
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', 'attachment; filename="cxpro-insights.json"');
+  return res.json({ exportedAt: new Date().toISOString(), count: analysisLogs.length, logs: analysisLogs });
+});
+
 // VITE MIDDLEWARE SETUP
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
@@ -712,13 +925,14 @@ async function startServer() {
   }
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`CXPro Server running on http://0.0.0.0:${PORT}`);
-    if (!OPENROUTER_API_KEY) {
-      console.warn('WARNING: OPENROUTER_API_KEY not configured. Using client-side fallback.');
-    } else {
-      console.log('OpenRouter multi-model engine active:');
-      console.log('  Structure: NVIDIA Nemotron 3 Ultra (550B)');
-      console.log('  Risk: OpenAI gpt-oss-20b');
-      console.log('  Clause: Z.ai GLM 5.2');
+    const orStatus = OPENROUTER_API_KEY ? 'ACTIVE' : 'MISSING';
+    const gemStatus = GEMINI_API_KEY ? 'ACTIVE' : 'MISSING';
+    console.log(`Multi-model engine status:`);
+    console.log(`  Structure: NVIDIA Nemotron 3 Ultra (550B) via OpenRouter [${orStatus}]`);
+    console.log(`  Risk: Google Gemini 2.0 Flash via Gemini API [${gemStatus}]`);
+    console.log(`  Clause: Z.ai GLM 5.2 via OpenRouter [${orStatus}]`);
+    if (!OPENROUTER_API_KEY && !GEMINI_API_KEY) {
+      console.warn('WARNING: No AI API keys configured. Using client-side fallback.');
     }
   });
 }
