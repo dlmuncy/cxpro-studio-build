@@ -64,9 +64,12 @@ const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemi
 
 const MODELS = {
   structure: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  risk: 'gemini-2.0-flash',  // via Gemini API directly for reliability
+  risk: 'google/gemini-2.0-flash-exp:free',
   clause: 'z-ai/glm-5.2:free',
-  synthesis: 'nvidia/nemotron-3-ultra-550b-a55b:free'
+  // Fallback models if primary fails
+  structureFallback: 'meta-llama/llama-3.3-70b-instruct:free',
+  riskFallback: 'nvidia/nemotron-3-ultra-550b-a55b:free',
+  clauseFallback: 'nvidia/nemotron-3-ultra-550b-a55b:free'
 };
 
 const SPEC_WEIGHTS = {
@@ -236,8 +239,13 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: overallRiskCategory, risks, complianceGaps`;
-  // Use Gemini API directly for reliable, consistent JSON output
-  return callGemini(system, user);
+  // Try primary risk model (Gemini Flash via OpenRouter), fallback to Nemotron
+  let result = await callOpenRouter(MODELS.risk, system, user, true);
+  if (!result) {
+    console.warn('[CXPro Engine] Risk model (Gemini) failed, trying fallback (Nemotron)...');
+    result = await callOpenRouter(MODELS.riskFallback, system, user, true);
+  }
+  return result;
 }
 
 async function phase1_clauseAnalysis(contractText: string): Promise<any> {
@@ -252,7 +260,13 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: clauseMatches, languageSimplificationSuggestions, overallClauseQuality`;
-  return callOpenRouter(MODELS.clause, system, user, true);
+  // Try primary clause model (GLM 5.2), fallback to Nemotron
+  let result = await callOpenRouter(MODELS.clause, system, user, true);
+  if (!result) {
+    console.warn('[CXPro Engine] Clause model (GLM 5.2) failed, trying fallback (Nemotron)...');
+    result = await callOpenRouter(MODELS.clauseFallback, system, user, true);
+  }
+  return result;
 }
 
 // PHASE 2: CROSS-VALIDATION
@@ -970,13 +984,13 @@ async function startServer() {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`CXPro Server running on http://0.0.0.0:${PORT}`);
     const orStatus = OPENROUTER_API_KEY ? 'ACTIVE' : 'MISSING';
-    const gemStatus = GEMINI_API_KEY ? 'ACTIVE' : 'MISSING';
     console.log(`Multi-model engine status:`);
-    console.log(`  Structure: NVIDIA Nemotron 3 Ultra (550B) via OpenRouter [${orStatus}]`);
-    console.log(`  Risk: Google Gemini 2.0 Flash via Gemini API [${gemStatus}]`);
-    console.log(`  Clause: Z.ai GLM 5.2 via OpenRouter [${orStatus}]`);
-    if (!OPENROUTER_API_KEY && !GEMINI_API_KEY) {
-      console.warn('WARNING: No AI API keys configured. Using client-side fallback.');
+    console.log(`  Structure: NVIDIA Nemotron 3 Ultra (550B) [${orStatus}]`);
+    console.log(`  Risk: Google Gemini 2.0 Flash (via OpenRouter) [${orStatus}]`);
+    console.log(`  Clause: Z.ai GLM 5.2 [${orStatus}]`);
+    console.log(`  Fallbacks: Nemotron for all lanes`);
+    if (!OPENROUTER_API_KEY) {
+      console.warn('WARNING: OPENROUTER_API_KEY not configured. Using client-side fallback.');
     }
   });
 }
