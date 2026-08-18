@@ -14,6 +14,17 @@ const PORT = Number(process.env.PORT) || 3000;
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
+// CORS for browser extension support
+app.use((req: any, res: any, next: any) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 const contractDb: Map<string, ContractRecord> = new Map();
 for (const sample of SAMPLE_ANALYZED_CONTRACTS) {
   contractDb.set(sample.id, sample);
