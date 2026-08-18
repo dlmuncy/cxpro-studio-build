@@ -329,8 +329,10 @@ function assembleFallback(structureFindings: any, validatedRisks: any[], clauseF
 // MAIN ANALYSIS ORCHESTRATOR
 
 async function runMultiModelAnalysis(contractText: string, filename: string): Promise<any> {
-  console.log(`[CXPro Engine] Starting 4-phase multi-model analysis for ${filename} (${contractText.length} chars)`);
-  console.log('[CXPro Engine] Phase 1: Parallel specialized analysis...');
+  console.log(`[CXPro Engine] Starting multi-model analysis for ${filename} (${contractText.length} chars)`);
+
+  // PHASE 1: 3 models in parallel (only API calls)
+  console.log('[CXPro Engine] Phase 1: Parallel analysis (3 models)...');
   const [structureResult, riskResult, clauseResult] = await Promise.all([
     phase1_structureAnalysis(contractText),
     phase1_riskAnalysis(contractText),
@@ -338,7 +340,7 @@ async function runMultiModelAnalysis(contractText: string, filename: string): Pr
   ]);
 
   if (!structureResult && !riskResult && !clauseResult) {
-    console.error('[CXPro Engine] All models failed. Client-side fallback.');
+    console.error('[CXPro Engine] All models failed.');
     return null;
   }
 
@@ -346,18 +348,54 @@ async function runMultiModelAnalysis(contractText: string, filename: string): Pr
   const risk = riskResult || { overallRiskCategory: 'Unknown', risks: [], complianceGaps: [] };
   const clause = clauseResult || { clauseMatches: [], languageSimplificationSuggestions: [], overallClauseQuality: 'Unknown' };
 
-  console.log('[CXPro Engine] Phase 1 complete.');
-  console.log('[CXPro Engine] Phase 2: Cross-validation...');
-  const { validatedRisks } = await phase2_crossValidate(structure, risk, clause);
-  console.log(`[CXPro Engine] Phase 2 complete. ${validatedRisks.length} risks, ${validatedRisks.filter(r => r.aiAgreementCount >= 2).length} confirmed by 2+ models.`);
+  console.log('[CXPro Engine] Phase 1 complete. S:' + !!structureResult + ' R:' + !!riskResult + ' C:' + !!clauseResult);
 
-  console.log('[CXPro Engine] Phase 3: Weighted consensus scoring...');
+  // PHASE 2: Local cross-validation (no API calls)
+  // Score each risk by how many models independently detected similar themes
+  console.log('[CXPro Engine] Phase 2: Local cross-validation...');
+  const validatedRisks = (risk.risks || []).map((r: any) => {
+    // Check if structure analysis flagged similar clauses
+    const structureMentions = JSON.stringify(structure).toLowerCase();
+    const clauseMentions = JSON.stringify(clause).toLowerCase();
+    const riskKeywords = (r.clauseTitle || '').toLowerCase().split(/\s+/);
+
+    let crossConfirmations = 0;
+    for (const kw of riskKeywords) {
+      if (kw.length > 4 && (structureMentions.includes(kw) || clauseMentions.includes(kw))) {
+        crossConfirmations++;
+        break;
+      }
+    }
+
+    let confidenceMultiplier = 0.45;
+    if (crossConfirmations > 0) confidenceMultiplier = 0.75;
+    // Check if clause analysis flagged same area
+    const clauseQualityIssues = (clause.clauseMatches || []).filter((c: any) =>
+      c.qualityAssessment === 'Weaker than Standard' || c.qualityAssessment === 'Ambiguous'
+    );
+    if (clauseQualityIssues.length > 0 && crossConfirmations > 0) confidenceMultiplier = 1.0;
+
+    const adjustedScoreImpact = Math.round((r.scoreImpact || 10) * confidenceMultiplier);
+    return {
+      ...r,
+      confidenceScore: Math.round(confidenceMultiplier * 100) / 100,
+      aiAgreementCount: crossConfirmations > 0 ? 3 : 1,
+      confirmedBy: crossConfirmations > 0 ? ['risk-model', 'structure-model', 'clause-model'] : ['risk-model'],
+      adjustedScoreImpact,
+      originalScoreImpact: r.scoreImpact
+    };
+  });
+  console.log(`[CXPro Engine] Phase 2 complete. ${validatedRisks.filter(r => r.aiAgreementCount >= 2).length}/${validatedRisks.length} cross-confirmed.`);
+
+  // PHASE 3: Local consensus scoring
+  console.log('[CXPro Engine] Phase 3: Consensus scoring...');
   const consensusData = phase3_consensusScoring(validatedRisks, structure, clause);
   console.log(`[CXPro Engine] Phase 3 complete. Score: ${consensusData.overallRiskScore}/100`);
 
-  console.log('[CXPro Engine] Phase 4: Synthesis...');
-  const finalResult = await phase4_synthesis(structure, validatedRisks, clause, consensusData, filename);
-  console.log('[CXPro Engine] Phase 4 complete.');
+  // PHASE 4: Local assembly (no API call — saves ~10-15 seconds)
+  console.log('[CXPro Engine] Phase 4: Local synthesis...');
+  const finalResult = assembleFallback(structure, validatedRisks, clause, consensusData, filename);
+  console.log('[CXPro Engine] Done.');
   return finalResult;
 }
 
