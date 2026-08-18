@@ -105,10 +105,10 @@ export const ContractGeneratorView: React.FC<ContractGeneratorViewProps> = ({
         <div>
           <div className="flex items-center space-x-2">
             <span className="h-2 w-2 bg-[#F97316]"></span>
-            <h1 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">AI Contract Synthesis Engine</h1>
+            <h1 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">AI Contract Analysis Engine</h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            GENERATE COMMERCIAL CONTRACT DRAFTS FROM ATTORNEY-VETTED TEMPLATES & MULTI-AI CLAUSES
+            GENERATE COMMERCIAL CONTRACT DRAFTS FROM ATTORNEY-VETTED TEMPLATES & MULTI-MODEL CLAUSES
           </p>
         </div>
       </div>

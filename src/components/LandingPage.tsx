@@ -34,17 +34,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/60 text-[#F97316] text-xs font-bold shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#F97316] animate-pulse" />
-              <span>CXPRO.SITE MULTI-AI CONCORDANCE ENGINE v4.2</span>
+              <span>CXPRO.SITE MULTI-MODEL CONSENSUS ENGINE</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] dark:text-white uppercase font-sans leading-tight">
-              Audit Contracts in <span className="text-[#F97316]">Seconds</span> With Multi-AI Precision
+              Don't Sign Blind. <span className="text-[#F97316]">Know What You're Agreeing To.</span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-mono">
-              cxpro.site orchestrates GPT-4o, Claude 3.5, and Gemini 1.5 in parallel to instantly uncover catastrophic liabilities, benchmark against 500+ vetted clauses, and draft watertight legal agreements.
+              Built for AI testers, model trainers, and QA professionals. cxpro.site runs three independent AI models in parallel to analyze any contract or terms of service, flag hidden risks, and give you a clear risk score before you sign. No copy-paste needed with our browser extension.
             </p>
 
 
@@ -72,7 +72,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   className="w-full sm:w-auto px-4 py-3 rounded bg-amber-500/10 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-500/40 hover:bg-amber-500/20 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-1.5"
                 >
                   <GraduationCap className="w-4 h-4 text-amber-500" />
-                  <span>Software & AI Testing ($49.99)</span>
+                  <span>AI Tester / QA Pro ($49.99)</span>
                 </button>
               )}
             </div>
@@ -105,10 +105,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <h2 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">
-              Triple-AI Consensus Architecture
+              How It Works
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Single-AI models miss subtle legal loopholes. CXPro triangulates findings across 3 frontier models.
+              Three independent AI models analyze your contract simultaneously. When they agree, you know the risk is real.
             </p>
           </div>
 
@@ -117,7 +117,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="p-3.5 rounded border border-[#D1D1D1] dark:border-[#333333] bg-white dark:bg-[#181818] space-y-1.5">
                 <div className="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase">
                   <Layers className="w-4 h-4" />
-                  <span>GPT-4o Engine</span>
+                  <span>Model A: Structural Analysis</span>
                 </div>
                 <h4 className="font-bold text-xs text-[#1A1A1A] dark:text-white uppercase font-sans">Structure & Intent</h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-300">Extracts commercial terms, auto-renewals, missing mandatory clauses, and party leverage dynamics.</p>
@@ -126,7 +126,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="p-3.5 rounded border border-[#D1D1D1] dark:border-[#333333] bg-white dark:bg-[#181818] space-y-1.5">
                 <div className="flex items-center space-x-2 text-purple-600 dark:text-purple-400 font-bold text-xs uppercase">
                   <Shield className="w-4 h-4" />
-                  <span>Claude 3.5 Engine</span>
+                  <span>Model B: Risk Detection</span>
                 </div>
                 <h4 className="font-bold text-xs text-[#1A1A1A] dark:text-white uppercase font-sans">Risk & Compliance</h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-300">Quantifies 0-100 liability risk scores, flags one-sided indemnification, and audits GDPR / CCPA gaps.</p>
@@ -135,7 +135,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="p-3.5 rounded border border-[#D1D1D1] dark:border-[#333333] bg-white dark:bg-[#181818] space-y-1.5">
                 <div className="flex items-center space-x-2 text-sky-600 dark:text-sky-400 font-bold text-xs uppercase">
                   <Scale className="w-4 h-4" />
-                  <span>Gemini 1.5 Engine</span>
+                  <span>Model C: Clause Quality</span>
                 </div>
                 <h4 className="font-bold text-xs text-[#1A1A1A] dark:text-white uppercase font-sans">Clause Comparison</h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-300">Cross-checks provisions against 500+ library rules and provides 1-click watertight replacement rewrites.</p>
@@ -145,17 +145,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* HANDSHAKE AI SOFTWARE & AI TESTING CONTRACTOR SPOTLIGHT SECTION */}
+      {/* AI TESTER & QA PROFESSIONAL DISCOUNT SECTION */}
       <section className="py-10 bg-amber-50/50 dark:bg-amber-950/20 border-b border-amber-200 dark:border-amber-900/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-[#1C1C1C] border border-amber-300 dark:border-amber-800/60 rounded p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase">
                 <GraduationCap className="w-3.5 h-3.5" />
-                <span>Handshake AI • Software & AI Testing Contractor Suite</span>
+                <span>AI Tester & QA Pro Discount</span>
               </div>
               <h3 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">
-                Contract Defense for AI & QA Contractors: <span className="text-[#F97316] font-mono">$49.99/mo</span>
+                Contract Defense for AI Testers & QA Pros: <span className="text-[#F97316] font-mono">$49.99/mo</span>
                 <span className="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400 font-mono">(3 Scans/mo)</span>
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 font-mono leading-relaxed">
@@ -265,7 +265,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => onSelectPlan('professional')}
                 className="w-full py-2 px-3 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all"
               >
-                Unlock Full cxpro.site Engine
+                Unlock Full Analysis Engine
               </button>
             </div>
           </div>

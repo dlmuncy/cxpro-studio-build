@@ -65,7 +65,7 @@ export const StudentDiscountModal: React.FC<StudentDiscountModalProps> = ({
       id: 'stu_' + Date.now(),
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),
-      university: university.trim() || 'Handshake Student / Contractor',
+      university: university.trim() || 'AI Testing Contractor',
       handshakeProfile: handshakeProfile.trim(),
       contractorRole: contractorRole.trim(),
       discountCode: 'HANDSHAKE49',
@@ -129,7 +129,7 @@ export const StudentDiscountModal: React.FC<StudentDiscountModalProps> = ({
       onApplyStudentCode({
         id: 'stu_' + Date.now(),
         fullName: fullName.trim() || 'Software/AI Contractor',
-        email: email.trim() || 'contractor@handshake.edu',
+        email: email.trim() || 'contractor@aitester.pro',
         contractorRole: contractorRole.trim(),
         discountCode: 'HANDSHAKE49',
         claimedAt: new Date().toISOString(),

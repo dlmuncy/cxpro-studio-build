@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onOpenStudentModal}
                 className="hidden lg:flex items-center space-x-1 px-2 py-1 text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded transition-all"
-                title="Handshake AI Software & AI Testing Contractor Discount ($49.99/mo • 3 Scans/mo)"
+                title="AI Tester & QA Professional Discount ($49.99/mo • 3 Scans/mo)"
               >
                 <GraduationCap className="w-3.5 h-3.5" />
                 <span>AI Testing $49.99</span>
@@ -212,7 +212,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center space-x-2">
                 <GraduationCap className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-bold text-amber-700 dark:text-amber-300">
-                  🎓 Handshake AI Student: $49.99/mo
+                  🎓 AI Tester / QA Pro: $49.99/mo
                 </span>
               </div>
               <span className="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded font-bold">

@@ -107,7 +107,7 @@ export default function App() {
   const handleUpgradeSubscription = (tier: SubscriptionTier) => {
     const planNames: Record<SubscriptionTier, string> = {
       free: 'Free Tier',
-      student: 'Student (Handshake AI - Software & AI Testing)',
+      student: 'AI Tester / QA Professional',
       starter: 'Starter Plan',
       professional: 'Professional Plan',
       enterprise: 'Enterprise Team'
@@ -319,7 +319,7 @@ export default function App() {
         {/* SYSTEM STATUS BAR FOOTER */}
         <div className="h-6 bg-[#1A1A1A] text-white flex items-center justify-between px-4 text-[9px] font-mono border-t border-[#333333]">
           <div className="flex gap-4 items-center">
-            <span className="text-[#F97316]">ENGINE: CXPRO.SITE MULTI-AI v4.2</span>
+            <span className="text-[#F97316]">ENGINE: MULTI-MODEL CONSENSUS v5.0</span>
             <span className="opacity-40">|</span>
             <span className="text-emerald-400">TIER: {subscription.planName.toUpperCase()}</span>
 

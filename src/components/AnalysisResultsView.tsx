@@ -136,7 +136,7 @@ export const AnalysisResultsView: React.FC<AnalysisResultsViewProps> = ({
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
-            CXPRO.SITE MULTI-AI AUDIT (GPT-4o / CLAUDE 3.5 / GEMINI 1.5) • TOTAL ISSUES FOUND: {totalIssuesCount}
+            CXPRO.SITE MULTI-MODEL CONSENSUS AUDIT • TOTAL ISSUES FOUND: {totalIssuesCount}
           </p>
         </div>
 

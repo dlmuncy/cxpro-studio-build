@@ -105,7 +105,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <h1 className="text-xl font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">System Dashboard</h1>
           </div>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 font-mono">
-            MULTI-AI RISK ENGINE • QUANTIFIED CONTRACT AUDITS & CONSENSUS
+            MULTI-MODEL CONSENSUS • QUANTIFIED CONTRACT ANALYSIS
           </p>
         </div>
 
@@ -250,7 +250,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-sans">
-              {isAnalyzing ? 'Multi-AI Orchestration Engine Analyzing Document...' : 'Upload Contract for Instant Multi-AI Audit'}
+              {isAnalyzing ? 'Multi-Model Consensus Engine Analyzing Document...' : 'Upload Contract for Instant Consensus Analysis'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-md mx-auto font-mono">
               Drag & drop PDF, DOCX, or TXT file here, or browse local filesystem
@@ -284,7 +284,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="px-4 py-3 bg-[#F8F8F8] dark:bg-[#222222] border-b border-[#D1D1D1] dark:border-[#333333] flex items-center justify-between">
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] dark:text-white font-mono">Recent Contract Audits</h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">Click any row to inspect multi-AI consensus report</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">Click any row to inspect consensus analysis report</p>
           </div>
 
           <button
