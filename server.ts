@@ -64,12 +64,12 @@ const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemi
 
 const MODELS = {
   structure: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  risk: 'google/gemini-2.0-flash-exp:free',
-  clause: 'z-ai/glm-5.2:free',
-  // Fallback models if primary fails
-  structureFallback: 'meta-llama/llama-3.3-70b-instruct:free',
-  riskFallback: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  clauseFallback: 'nvidia/nemotron-3-ultra-550b-a55b:free'
+  risk: 'nvidia/nemotron-3-ultra-550b-a55b:free',       // same model, different prompt lens
+  clause: 'nvidia/nemotron-3-ultra-550b-a55b:free',      // same model, different prompt lens
+  // Alternative models (used if Nemotron is rate-limited)
+  altStructure: 'meta-llama/llama-3.3-70b-instruct:free',
+  altRisk: 'meta-llama/llama-3.3-70b-instruct:free',
+  altClause: 'meta-llama/llama-3.3-70b-instruct:free'
 };
 
 const SPEC_WEIGHTS = {
@@ -106,11 +106,15 @@ async function callOpenRouter(model: string, systemPrompt: string, userPrompt: s
   }
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 35000); // 35s max per model
     const response = await fetch(OPENROUTER_URL, {
       method: 'POST',
       headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
 
     if (!response.ok) {
       const errText = await response.text();
@@ -239,11 +243,11 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: overallRiskCategory, risks, complianceGaps`;
-  // Try primary risk model (Gemini Flash via OpenRouter), fallback to Nemotron
+  // Use Nemotron for risk analysis (most reliable), fallback to Llama 3.3 70B
   let result = await callOpenRouter(MODELS.risk, system, user, true);
   if (!result) {
-    console.warn('[CXPro Engine] Risk model (Gemini) failed, trying fallback (Nemotron)...');
-    result = await callOpenRouter(MODELS.riskFallback, system, user, true);
+    console.warn('[CXPro Engine] Risk model (Nemotron) failed, trying Llama 3.3...');
+    result = await callOpenRouter(MODELS.altRisk, system, user, true);
   }
   return result;
 }
@@ -260,11 +264,11 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: clauseMatches, languageSimplificationSuggestions, overallClauseQuality`;
-  // Try primary clause model (GLM 5.2), fallback to Nemotron
+  // Use Nemotron for clause analysis, fallback to Llama 3.3 70B
   let result = await callOpenRouter(MODELS.clause, system, user, true);
   if (!result) {
-    console.warn('[CXPro Engine] Clause model (GLM 5.2) failed, trying fallback (Nemotron)...');
-    result = await callOpenRouter(MODELS.clauseFallback, system, user, true);
+    console.warn('[CXPro Engine] Clause model (Nemotron) failed, trying Llama 3.3...');
+    result = await callOpenRouter(MODELS.altClause, system, user, true);
   }
   return result;
 }
@@ -986,9 +990,10 @@ async function startServer() {
     const orStatus = OPENROUTER_API_KEY ? 'ACTIVE' : 'MISSING';
     console.log(`Multi-model engine status:`);
     console.log(`  Structure: NVIDIA Nemotron 3 Ultra (550B) [${orStatus}]`);
-    console.log(`  Risk: Google Gemini 2.0 Flash (via OpenRouter) [${orStatus}]`);
-    console.log(`  Clause: Z.ai GLM 5.2 [${orStatus}]`);
-    console.log(`  Fallbacks: Nemotron for all lanes`);
+    console.log(`  Risk: NVIDIA Nemotron 3 Ultra (550B) [${orStatus}]`);
+    console.log(`  Clause: NVIDIA Nemotron 3 Ultra (550B) [${orStatus}]`);
+    console.log(`  Fallback: Meta Llama 3.3 70B for all lanes`);
+    console.log(`  Timeout: 35s per model call (parallel)`);
     if (!OPENROUTER_API_KEY) {
       console.warn('WARNING: OPENROUTER_API_KEY not configured. Using client-side fallback.');
     }
