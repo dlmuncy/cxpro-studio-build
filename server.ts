@@ -61,15 +61,18 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent';
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
+const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929';
 
 const MODELS = {
-  structure: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  risk: 'gemini-3.6-flash',        // via Gemini API directly (reliable, fast)
-  clause: 'gemini-3.6-flash',      // via Gemini API directly
-  // OpenRouter fallbacks
+  structure: 'nvidia/nemotron-3-ultra-550b-a55b:free',     // OpenRouter
+  risk: 'gemini-3.6-flash',                                // Gemini direct API
+  clause: 'claude-sonnet-4-5-20250929',                    // Anthropic direct API
+  // Fallbacks
   altStructure: 'meta-llama/llama-3.3-70b-instruct:free',
   altRisk: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-  altClause: 'nvidia/nemotron-3-ultra-550b-a55b:free'
+  altClause: 'gemini-3.6-flash'                             // Gemini fallback for clause
 };
 
 const SPEC_WEIGHTS = {
@@ -208,6 +211,80 @@ async function callGemini(systemPrompt: string, userPrompt: string): Promise<any
   }
 }
 
+
+// Claude (Anthropic) direct API call — excellent at legal/contract analysis
+async function callClaude(systemPrompt: string, userPrompt: string): Promise<any> {
+  if (!ANTHROPIC_API_KEY) {
+    console.warn('[Claude] No API key configured.');
+    return null;
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 35000);
+
+    const response = await fetch(ANTHROPIC_URL, {
+      method: 'POST',
+      headers: {
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: CLAUDE_MODEL,
+        max_tokens: 8000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`[Claude] returned ${response.status}: ${errText.substring(0, 300)}`);
+      return null;
+    }
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text;
+    if (!text) {
+      console.error('[Claude] returned empty content');
+      return null;
+    }
+
+    // Strip markdown code blocks if present
+    let jsonStr = text.trim();
+    if (jsonStr.startsWith('```')) {
+      jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+    }
+
+    try {
+      return JSON.parse(jsonStr);
+    } catch (parseErr) {
+      console.error('[Claude] JSON parse failed:', parseErr);
+      // Try to extract JSON from the text
+      const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          return JSON.parse(jsonMatch[0]);
+        } catch {
+          console.error('[Claude] JSON extraction also failed');
+          return null;
+        }
+      }
+      return null;
+    }
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      console.error('[Claude] request timed out after 35s');
+    } else {
+      console.error('[Claude] call failed:', err.message);
+    }
+    return null;
+  }
+}
+
 // PHASE 1: PARALLEL SPECIALIZED ANALYSIS
 
 async function phase1_structureAnalysis(contractText: string): Promise<any> {
@@ -264,10 +341,14 @@ Contract Text:
 ${contractText.substring(0, 12000)}
 """
 Output JSON with keys: clauseMatches, languageSimplificationSuggestions, overallClauseQuality`;
-  // Use Gemini 3.6 Flash (direct API), fallback to Nemotron via OpenRouter
-  let result = await callGemini(system, user);
+  // Use Claude Sonnet 4.5 (direct Anthropic API, excellent at legal text), fallback to Gemini
+  let result = await callClaude(system, user);
   if (!result) {
-    console.warn('[CXPro Engine] Gemini clause model failed, trying Nemotron fallback...');
+    console.warn('[CXPro Engine] Claude clause model failed, trying Gemini fallback...');
+    result = await callGemini(system, user);
+  }
+  if (!result) {
+    console.warn('[CXPro Engine] Gemini fallback also failed, trying Nemotron via OpenRouter...');
     result = await callOpenRouter(MODELS.altClause, system, user, true);
   }
   return result;
@@ -434,7 +515,7 @@ function assembleFallback(structureFindings: any, validatedRisks: any[], clauseF
     modelAttribution: {
       structure: 'NVIDIA Nemotron 3 Ultra (550B)',
       risk: 'Google Gemini 3.6 Flash',
-      clause: 'Z.ai GLM 5.2',
+      clause: 'Anthropic Claude Sonnet 4.5',
       synthesis: 'Assembled from component data (synthesis model unavailable)'
     }
   };
@@ -880,11 +961,21 @@ app.post('/api/debug/model-test', async (req, res) => {
   if (model === 'clause' || model === 'all') {
     try {
       const t = Date.now();
-      const raw = await callOpenRouter(MODELS.clause, 'You are a clause quality engine. Output ONLY valid JSON.',
-        'Analyze: ' + testText + '\nOutput JSON: {clauseMatches: [], overallClauseQuality: string}', true);
+      const raw = await callClaude('You are a clause quality engine. Output ONLY valid JSON.',
+        'Analyze: ' + testText + '\nOutput JSON: {clauseMatches: [], overallClauseQuality: string}');
       results.clause = { success: !!raw, latencyMs: Date.now() - t, data: raw };
     } catch (e: any) {
       results.clause = { success: false, error: e.message };
+    }
+  }
+  if (model === 'claude' || model === 'all') {
+    try {
+      const t = Date.now();
+      const raw = await callClaude('You are a risk analysis engine. Output ONLY valid JSON.',
+        'Analyze: ' + testText + '\nOutput JSON: {overallRiskCategory: string, risks: [{id, clauseTitle, severity, scoreImpact, explanation, recommendedAction}]}');
+      results.claude = { success: !!raw, latencyMs: Date.now() - t, data: raw };
+    } catch (e: any) {
+      results.claude = { success: false, error: e.message };
     }
   }
 
@@ -989,13 +1080,14 @@ async function startServer() {
     console.log(`CXPro Server running on http://0.0.0.0:${PORT}`);
     const orStatus = OPENROUTER_API_KEY ? 'ACTIVE' : 'MISSING';
     const gemStatus = GEMINI_API_KEY ? 'ACTIVE' : 'MISSING';
+    const claudeStatus = ANTHROPIC_API_KEY ? 'ACTIVE' : 'MISSING';
     console.log(`Multi-model engine status:`);
     console.log(`  Structure: NVIDIA Nemotron 3 Ultra (550B) via OpenRouter [${orStatus}]`);
     console.log(`  Risk: Google Gemini 3.6 Flash via Gemini API [${gemStatus}]`);
-    console.log(`  Clause: Google Gemini 3.6 Flash via Gemini API [${gemStatus}]`);
-    console.log(`  Fallback: Nemotron Ultra via OpenRouter [${orStatus}]`);
+    console.log(`  Clause: Claude Sonnet 4.5 via Anthropic API [${claudeStatus}]`);
+    console.log(`  Fallbacks: Nemotron -> Gemini -> Nemotron(OR)`);
     console.log(`  Timeout: 35s per model call (parallel)`);
-    if (!OPENROUTER_API_KEY && !GEMINI_API_KEY) {
+    if (!OPENROUTER_API_KEY && !GEMINI_API_KEY && !ANTHROPIC_API_KEY) {
       console.warn('WARNING: No AI API keys configured. Using client-side fallback.');
     }
   });
