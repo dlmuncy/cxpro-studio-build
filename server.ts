@@ -153,7 +153,7 @@ async function callGemini(systemPrompt: string, userPrompt: string): Promise<any
 
   const body = {
     contents: [
-      { role: 'user', parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }
+      { role: 'user', parts: [{ text: userPrompt }] }
     ],
     generationConfig: {
       temperature: 0.3,
@@ -828,6 +828,50 @@ app.post('/api/billing/process-payment', (req, res) => {
 
 app.get('/api/billing/invoices', (req, res) => res.json({ success: true, invoices: billingInvoices }));
 app.get('/api/email/outbox', (req, res) => res.json({ success: true, emails: dispatchedEmails }));
+
+
+// DEBUG: Test individual model responses
+app.post('/api/debug/model-test', async (req, res) => {
+  const { model } = req.body;
+  const testText = "This NDA between Company A and Party B auto-renews yearly. Liability is uncapped. IP assignment is total.";
+
+  const results: any = {};
+
+  if (model === 'gemini' || model === 'all') {
+    try {
+      const t = Date.now();
+      const raw = await callGemini('You are a risk analysis engine. Output ONLY valid JSON.',
+        'Analyze: ' + testText + '\nOutput JSON: {overallRiskCategory: string, risks: [{id, clauseTitle, severity, scoreImpact, explanation, recommendedAction}], complianceGaps: []}');
+      results.gemini = { success: !!raw, latencyMs: Date.now() - t, data: raw };
+    } catch (e: any) {
+      results.gemini = { success: false, error: e.message };
+    }
+  }
+
+  if (model === 'structure' || model === 'all') {
+    try {
+      const t = Date.now();
+      const raw = await callOpenRouter(MODELS.structure, 'You are a structure analysis engine. Output ONLY valid JSON.',
+        'Analyze: ' + testText + '\nOutput JSON: {documentClassification: string, parties: [], missingStandardClauses: []}', true);
+      results.structure = { success: !!raw, latencyMs: Date.now() - t, data: raw };
+    } catch (e: any) {
+      results.structure = { success: false, error: e.message };
+    }
+  }
+
+  if (model === 'clause' || model === 'all') {
+    try {
+      const t = Date.now();
+      const raw = await callOpenRouter(MODELS.clause, 'You are a clause quality engine. Output ONLY valid JSON.',
+        'Analyze: ' + testText + '\nOutput JSON: {clauseMatches: [], overallClauseQuality: string}', true);
+      results.clause = { success: !!raw, latencyMs: Date.now() - t, data: raw };
+    } catch (e: any) {
+      results.clause = { success: false, error: e.message };
+    }
+  }
+
+  return res.json({ success: true, results });
+});
 
 // ============================================================
 // INSIGHTS & ANALYTICS API
