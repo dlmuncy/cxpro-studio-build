@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-14 md:h-12">
           {/* Logo & Brand */}
           <div className="flex items-center space-x-2.5 cursor-pointer" onClick={() => handleNavClick('landing')}>
-            <div className="w-7 h-7 rounded bg-[#F97316] flex items-center justify-center text-white font-bold text-xs shadow-xs flex-shrink-0">
+            <div className="w-7 h-7 rounded bg-[#007BFF] flex items-center justify-center text-white font-bold text-xs shadow-xs flex-shrink-0">
               <Scale className="w-4 h-4" />
             </div>
             <div className="flex items-baseline space-x-1.5 min-w-0">
@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('landing')}
               className={`px-2.5 py-1.5 rounded text-xs font-bold transition-all uppercase tracking-wider flex items-center space-x-1.5 ${
                 activeTab === 'landing'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('dashboard')}
               className={`px-2.5 py-1.5 rounded text-xs font-bold transition-all uppercase tracking-wider flex items-center space-x-1.5 ${
                 activeTab === 'dashboard'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('analysis')}
               className={`px-2.5 py-1.5 rounded text-xs font-bold transition-all uppercase tracking-wider flex items-center space-x-1.5 ${
                 activeTab === 'analysis'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -98,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('library')}
               className={`px-2.5 py-1.5 rounded text-xs font-bold transition-all uppercase tracking-wider flex items-center space-x-1.5 ${
                 activeTab === 'library'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('generator')}
               className={`px-2.5 py-1.5 rounded text-xs font-bold transition-all uppercase tracking-wider flex items-center space-x-1.5 ${
                 activeTab === 'generator'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -139,7 +139,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1.5 font-mono shadow-2xs ${
                 isSubscribed
                   ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                  : 'bg-gradient-to-r from-[#F97316] to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white animate-pulse'
+                  : 'bg-gradient-to-r from-[#007BFF] to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white animate-pulse'
               }`}
             >
               {isSubscribed ? <Crown className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
@@ -164,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('dashboard')}
-              className="hidden xl:inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded bg-[#F97316] hover:bg-orange-600 text-white shadow-2xs transition-all font-mono"
+              className="hidden xl:inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded bg-[#007BFF] hover:bg-blue-600 text-white shadow-2xs transition-all font-mono"
             >
               + Audit
             </button>
@@ -175,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Toggle Menu"
               className="md:hidden p-1.5 rounded text-[#1A1A1A] dark:text-slate-200 hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A] border border-[#D1D1D1] dark:border-[#333333] transition-colors flex items-center justify-center"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5 text-[#F97316]" /> : <Menu className="w-5 h-5" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5 text-[#007BFF]" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -197,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <button
               onClick={() => { onOpenSubscriptionModal(); setIsMobileMenuOpen(false); }}
-              className="px-2.5 py-1 rounded bg-[#F97316] text-white font-bold text-[10px] uppercase font-mono shadow-2xs"
+              className="px-2.5 py-1 rounded bg-[#007BFF] text-white font-bold text-[10px] uppercase font-mono shadow-2xs"
             >
               {isSubscribed ? 'Manage Plan' : 'Subscribe Now'}
             </button>
@@ -230,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('landing')}
               className={`w-full px-3 py-2.5 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all ${
                 activeTab === 'landing'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 bg-[#F8F8F8] dark:bg-[#222222] hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -245,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('dashboard')}
               className={`w-full px-3 py-2.5 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all ${
                 activeTab === 'dashboard'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 bg-[#F8F8F8] dark:bg-[#222222] hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -260,7 +260,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('analysis')}
               className={`w-full px-3 py-2.5 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all ${
                 activeTab === 'analysis'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 bg-[#F8F8F8] dark:bg-[#222222] hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -275,7 +275,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('library')}
               className={`w-full px-3 py-2.5 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all ${
                 activeTab === 'library'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 bg-[#F8F8F8] dark:bg-[#222222] hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -290,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('generator')}
               className={`w-full px-3 py-2.5 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all ${
                 activeTab === 'generator'
-                  ? 'bg-[#F97316] text-white shadow-2xs'
+                  ? 'bg-[#007BFF] text-white shadow-2xs'
                   : 'text-[#1A1A1A] dark:text-slate-200 bg-[#F8F8F8] dark:bg-[#222222] hover:bg-[#E5E5E5] dark:hover:bg-[#2A2A2A]'
               }`}
             >
@@ -305,7 +305,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="pt-2 border-t border-[#D1D1D1] dark:border-[#333333] flex items-center justify-between font-mono">
             <button
               onClick={() => handleNavClick('dashboard')}
-              className="w-full py-2 px-3 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-2xs"
+              className="w-full py-2 px-3 rounded bg-[#007BFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-2xs"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Audit New Contract</span>

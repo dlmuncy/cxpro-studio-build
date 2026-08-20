@@ -28,22 +28,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="min-h-screen bg-[#F8F8F8] dark:bg-[#121212] text-[#1A1A1A] dark:text-slate-100 transition-colors font-mono">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#D1D1D1] dark:border-[#333333] bg-white dark:bg-[#181818]">
+      <section className="relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#D1D1D1] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             {/* Badge */}
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/60 text-[#F97316] text-xs font-bold shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#F97316] animate-pulse" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-blue-50 border border-blue-200 text-[#007BFF] text-xs font-bold shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#007BFF] animate-pulse" />
               <span>CXPRO.SITE MULTI-MODEL CONSENSUS ENGINE</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] dark:text-white uppercase font-sans leading-tight">
-              Don't Sign Blind. <span className="text-[#F97316]">Know What You're Agreeing To.</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] uppercase font-sans leading-tight">
+              Don't Sign Blind. <span className="text-[#007BFF]">See What's Hiding.</span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-mono">
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-mono">
               Built for AI testers, model trainers, and QA professionals. cxpro.site runs three independent AI models in parallel to analyze any contract or terms of service, flag hidden risks, and give you a clear risk score before you sign. No copy-paste needed with our browser extension.
             </p>
 
@@ -52,7 +52,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={onStartTrial}
-                className="w-full sm:w-auto px-6 py-3 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3 rounded bg-[#007BFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-2"
               >
                 <span>Audit Sample Contract (Free Scan)</span>
                 <ArrowRight className="w-4 h-4" />
@@ -60,16 +60,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <button
                 onClick={() => onSelectPlan('professional')}
-                className="w-full sm:w-auto px-6 py-3 rounded bg-white dark:bg-[#252525] text-[#1A1A1A] dark:text-slate-200 font-bold text-xs uppercase tracking-wider border border-[#D1D1D1] dark:border-[#333333] hover:bg-[#F1F1F1] dark:hover:bg-[#333333] transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3 rounded bg-white text-[#1A1A1A] font-bold text-xs uppercase tracking-wider border border-[#D1D1D1] hover:bg-[#F1F1F1] transition-all flex items-center justify-center space-x-2"
               >
-                <Zap className="w-4 h-4 text-[#F97316]" />
+                <Zap className="w-4 h-4 text-[#007BFF]" />
                 <span>View Subscription Plans</span>
               </button>
 
               {onOpenStudentModal && (
                 <button
                   onClick={onOpenStudentModal}
-                  className="w-full sm:w-auto px-4 py-3 rounded bg-amber-500/10 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-500/40 hover:bg-amber-500/20 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-1.5"
+                  className="w-full sm:w-auto px-4 py-3 rounded bg-amber-50 text-amber-700 border border-amber-400 hover:bg-amber-100 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-1.5"
                 >
                   <GraduationCap className="w-4 h-4 text-amber-500" />
                   <span>AI Tester / QA Pro ($49.99)</span>
@@ -78,22 +78,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* Trust indicators */}
-            <div className="pt-8 border-t border-[#D1D1D1]/60 dark:border-[#333333] grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
+            <div className="pt-8 border-t border-[#D1D1D1]/60 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">SOC2 & GDPR Compliant</span>
+                <span className="text-[11px] text-slate-600">SOC2 & GDPR Compliant</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Award className="w-4 h-4 text-[#F97316] flex-shrink-0" />
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">98.4% Consensus Accuracy</span>
+                <Award className="w-4 h-4 text-[#007BFF] flex-shrink-0" />
+                <span className="text-[11px] text-slate-600">98.4% Consensus Accuracy</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Layers className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">500+ Vetted Clauses</span>
+                <span className="text-[11px] text-slate-600">500+ Vetted Clauses</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FileCheck className="w-4 h-4 text-sky-500 flex-shrink-0" />
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">DOCX Redlines Ready</span>
+                <span className="text-[11px] text-slate-600">DOCX Redlines Ready</span>
               </div>
             </div>
           </div>
@@ -168,7 +168,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   type="button"
                   onClick={onOpenStudentModal}
-                  className="px-5 py-2.5 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all flex items-center justify-center space-x-2"
+                  className="px-5 py-2.5 rounded bg-[#007BFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all flex items-center justify-center space-x-2"
                 >
                   <Tag className="w-3.5 h-3.5" />
                   <span>Claim $49.99 Contractor Code</span>
@@ -263,7 +263,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <button
                 onClick={() => onSelectPlan('professional')}
-                className="w-full py-2 px-3 rounded bg-[#F97316] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all"
+                className="w-full py-2 px-3 rounded bg-[#007BFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-all"
               >
                 Unlock Full Analysis Engine
               </button>
